@@ -28,5 +28,14 @@ pipeline{
             }
         
         }
+
+        stage("POLL SCM CHECK"){
+            steps{
+                sh '''
+                    df -kh
+                '''
+            }
+        
+        }
     }
 }
