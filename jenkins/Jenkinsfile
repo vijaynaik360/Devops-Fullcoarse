@@ -8,6 +8,7 @@ pipeline{
                     uptime
                 '''
             }
+        }
 
 
         stage("Ram usage"){
@@ -16,6 +17,7 @@ pipeline{
                     free -h
                 '''
             }
+        }
 
 
         stage("Disk utiliozation"){
@@ -24,6 +26,7 @@ pipeline{
                     df -kh
                 '''
             }
+        
         }
     }
 }
