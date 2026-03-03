@@ -1,5 +1,8 @@
 pipeline{
     agent any
+    environment{
+        IMAGE_NAME ='vijaynaik360/Devops-Fullcoarse:${GIT_COMMIT}'
+    }
     stages{
         stage("Git-Checkout"){
             steps{
@@ -11,6 +14,7 @@ pipeline{
             steps{
                 sh '''
                         printenv 
+                        docker build -t ${IMAGE_NAME} .
                     '''
                 }
             
