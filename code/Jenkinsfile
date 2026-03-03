@@ -1,7 +1,7 @@
 pipeline{
     agent any
     environment{
-        IMAGE_NAME ="vijaynaik360/Devops-Fullcoarse:${GIT_COMMIT}"
+        IMAGE_NAME = "vijaynaik360/Devops-Fullcoarse:${GIT_COMMIT}"
     }
     stages{
         stage("Git-Checkout"){
