@@ -21,16 +21,33 @@ pipeline{
                 }
             
             }
-        stage("Testing the iamge"){
+        // stage("Testing the iamge"){
+        //     steps{
+        //         sh '''
+        //             docker kill c1 || true
+        //             docker rm c1 || true
+        //             docker run -d --name c1 -p 9001:8501 ${IMAGE_NAME}
+        //             '''
+        //         }
+// }
+
+        stage("Docker_hub Login"){
             steps{
-                sh '''
-                    docker kill c1 || true
-                    docker rm c1 || true
-                    docker run -d --name c1 -p 9001:8501 ${IMAGE_NAME}
-                    '''
-                }
-            
+               withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+    sh '''
+        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    '''
+}
+         }
             }
 
+        stage("Push to Dockerhub"){
+            steps{
+                    sh '''
+                        docker push ${IMAGE_NAME}
+                    '''
+                }
+
+}
 }
 }
