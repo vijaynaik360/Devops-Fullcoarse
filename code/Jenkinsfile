@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+    stages{
+        stage("Git-Checkout"){
+            steps{
+                git url:"https://github.com/vijaynaik360/Devops-Fullcoarse.git",branch: 'main'
+                }
+            
+            }
+        stage("Build"){
+            steps{
+                sh '''
+                        printenv 
+                    '''
+                }
+            
+            }
+
+}
+}
