@@ -2,6 +2,9 @@ pipeline{
     agent any
     environment{
         IMAGE_NAME = "vijaynaik360/devops-fullcoarse:${GIT_COMMIT}"
+        AWS_REGION = "us-east-1"
+        CLUSTER_NAME = "microdegree-cluster"
+        NAMESPACE = "microdegree"
     }
     stages{
         stage("Git-Checkout"){
@@ -49,5 +52,53 @@ pipeline{
                 }
 
 }
+        stage('Cluster-Update') {
+                steps {
+                    sh '''
+                        aws eks update-kubeconfig \
+                        --region ${AWS_REGION} \
+                        --name ${CLUSTER_NAME}
+                    '''
+                }
+            }
+
+        stage('Deploying to EKS clsuter') {
+                steps {
+                    withKubeConfig(
+                        caCertificate: '',
+                        clusterName: 'microdegree',
+                        contextName: '',
+                        credentialsId: 'kube',
+                        namespace: 'microdegree',
+                        restrictKubeConfigAccess: false,
+                        serverUrl: 'https://C15C267E4D23793587108D7BD4C327D3.gr7.us-east-1.eks.amazonaws.com'
+                    ) {
+                        sh '''
+                          pwd
+                          cd code
+                          pwd
+                          sed -i "s|replace|${IMAGE_NAME}|g" deployment.yaml 
+                          kubectl apply -f deployment.yaml -n ${NAMESPACE}
+                        '''
+                    }
+                }
+            }
+
+            stage('Verify the deployment') {
+                steps {
+                    withKubeConfig(
+                        caCertificate: '',
+                        clusterName: 'microdegree',
+                        contextName: '',
+                        credentialsId: 'kube',
+                        namespace: 'microdegree',
+                        restrictKubeConfigAccess: false,
+                        serverUrl: 'https://C15C267E4D23793587108D7BD4C327D3.gr7.us-east-1.eks.amazonaws.com'
+                    ) {
+                        sh "kubectl get pods -n ${NAMESPACE}"
+                        sh "kubectl get svc -n ${NAMESPACE}"
+                    }
+                }
+            }        
 }
 }

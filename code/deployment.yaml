@@ -33,7 +33,7 @@ spec:
         app: my-deployment
     spec:
       containers:
-      - image: vijaynaik360/devops-fullcoarse:5789411ac9f463176e8808d660454b534f917e4c
+      - image: replace
         name: custom-image
         ports:
           - containerPort: 8501
